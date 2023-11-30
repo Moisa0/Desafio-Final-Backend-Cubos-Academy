@@ -1,4 +1,4 @@
-import { Router } from "express"
+import { Router } from 'express'
 import * as u from '../controladores/usuario.js'
 
 export const rotasUsuario = Router()
