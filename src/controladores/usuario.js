@@ -1,3 +1,3 @@
-export const cadastrar = (res, res) => {
+export const cadastrar = (req, res) => {
 
 }
