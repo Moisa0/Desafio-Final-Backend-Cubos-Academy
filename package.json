@@ -4,7 +4,7 @@
   "description": "![](https://i.imgur.com/xG74tOh.png)",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/server.js"
+    "dev": "nodemon ./src/index.js"
   },
   "keywords": ["nodejs", "JavaScript", "express"],
   "author": "Felipe Guimarães, Luccas Oliveira Marinho, Rafael Alves, Helison Santos, Moisés dos Santos Teles de Jesus",
