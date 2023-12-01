@@ -1,4 +1,6 @@
-import { app } from './index.js'
+import express from 'express'
+
+export const app = express()
 
 const porta = process.env.PORT || 3000
 

@@ -1,17 +1,14 @@
 {
-  "name": "desafio-backend-modulo-05-sistema-pdv-b2b-ifood-t11",
+  "name": "sistema-pdv",
   "version": "1.0.0",
   "description": "![](https://i.imgur.com/xG74tOh.png)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./src/server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["nodejs", "JavaScript", "express"],
+  "author": "Felipe Guimarães, Luccas Oliveira Marinho, Rafael Alves, Helison Santos, Moisés dos Santos Teles de Jesus",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
@@ -19,6 +16,9 @@
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.0.1",
     "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   },
   "type": "module"
 }

@@ -1,7 +1,6 @@
 import express from 'express'
-import { todasRotas } from './rotas/exportRotas.js'
-
-export const app = express()
+import { app } from './server.js'
+import { todasRotas } from './rotas/export/exportRotas.js'
 
 app.use(express.json())
 
