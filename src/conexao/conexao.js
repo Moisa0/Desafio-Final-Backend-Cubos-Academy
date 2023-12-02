@@ -1,6 +1,6 @@
-import knex from 'knex';
+import Knex from 'knex';
 
-export const knex = knex({
+export const knex = Knex({
     client: 'pg',
     connection: {
         host: process.env.DB_HOST,
