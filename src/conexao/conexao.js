@@ -1,6 +1,6 @@
 import knex from 'knex';
 
-const connection = knex({
+export const knex = knex({
     client: 'pg',
     connection: {
         host: process.env.DB_HOST,
@@ -11,4 +11,4 @@ const connection = knex({
     }
 });
 
-export default connection;
+
