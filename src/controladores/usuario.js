@@ -1,5 +1,5 @@
 import { mensagemJson } from '../servicos/servico.js'
-import knex from '../conexao/conexao.js'
+import { knex } from '../conexao/conexao.js'
 import bcrypt from 'bcrypt'
 
 export const cadastrar = async (req, res) => {
