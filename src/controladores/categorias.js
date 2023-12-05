@@ -1,14 +1,11 @@
 import { knex } from '../conexao/conexao.js'
+import { mensagemJson } from '../servico/servico.js'
 
-export async function listar (req, res) {
+export const listar = async (req, res) => {
     try {
-
-        const categorias = await knex("categorias")
-    return res.status(200).json(categorias);
-
+    	const categorias = await knex("categorias")
+    	return mensagemJson(200, res, categorias)
     } catch (error) {
-        //console.log (error.mensage)
-        return res.status(500).json({ mensagem: "Erro interno do servidor!"})      
+        return mensagemJson(500, res, "Erro interno do servidor!")
     }
-    
 }
