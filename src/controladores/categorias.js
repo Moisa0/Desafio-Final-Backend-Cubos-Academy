@@ -1,5 +1,5 @@
 import { knex } from '../conexao/conexao.js'
-import { mensagemJson } from '../servico/servico.js'
+import { mensagemJson } from '../servicos/servico.js'
 
 export const listar = async (req, res) => {
     try {
