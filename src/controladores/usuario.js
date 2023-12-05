@@ -59,3 +59,12 @@ export const atualizar = async (req, res) => {
         
     }
 }
+
+export const detalharPerfil = async (req, res) => {
+    const { senha:_, ...usuario } = req.usuario
+    try {
+        return mensagemJson(200, res, usuario)
+    } catch (error) {
+        return mensagemJson(500, res, error.message)
+    }
+}
