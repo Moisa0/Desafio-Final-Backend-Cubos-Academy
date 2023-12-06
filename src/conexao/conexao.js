@@ -1,4 +1,7 @@
-import Knex from 'knex';
+import Knex from 'knex'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export const knex = Knex({
     client: 'pg',
@@ -9,6 +12,4 @@ export const knex = Knex({
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
     }
-});
-
-
+})

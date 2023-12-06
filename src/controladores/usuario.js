@@ -1,64 +1,41 @@
 import { mensagemJson } from '../servicos/servico.js'
 import { knex } from '../conexao/conexao.js'
-import bcrypt from 'bcrypt'
+import { hash } from 'bcrypt'
 
 export const cadastrar = async (req, res) => {
     const { nome, email, senha } = req.body
 
     try {
-        const verificandoEmail = await knex('usuarios').where({ email })
+        const [ emailExiste ] = await knex('usuarios').where({ email })
+        if(emailExiste) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
 
-        if(verificandoEmail.length !== 0) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
+        const usuario = { nome, email, senha: await hash(senha, 10) }
+        const [ usuarioCadastrado ] = await knex('usuarios').insert(usuario).returning(['id', 'nome', 'email'])
 
-        const senhaCriptografada = await bcrypt.hash(senha, 10)
-
-        const usuario = {
-            nome,
-            email,
-            senha: senhaCriptografada
-        }
-
-        const insertUsuario = await knex('usuarios').insert(usuario).returning(['id', 'nome', 'email'])
-
-
-        return mensagemJson(201, res, insertUsuario)
+        return mensagemJson(201, res, usuarioCadastrado)
     } catch (error) {
         return mensagemJson(500, res, error.message)
     }
 }
 
 export const atualizar = async (req, res) => {
-    const { nome, email, senha } = req.body
+    const { body: { nome, email, senha }, usuarioLogado } = req
 
     try {
-        const verificandoEmail = await knex('usuarios').where({ email })
-        
-        if(verificandoEmail.length !== 0 && verificandoEmail[0].email !== req.usuario.email) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
-        
-        const senhaCriptografada = await bcrypt.hash(senha, 10)
+        const [ usuarioExiste ] = await knex('usuarios').where({ email })
+        const emailEmUso = usuarioExiste && usuarioExiste.email !== usuarioLogado.email
+        if (emailEmUso) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
 
-        const usuario = {
-            nome,
-            email,
-            senha: senhaCriptografada
-        }
-        
-        const { id } = req.usuario
-
-        const atualizarUsuario = await knex('usuarios').update(usuario).where({ id }).returning([ 'id', 'nome', 'email' ])
+        const senhaCriptografada = await hash(senha, 10)
+        const [ atualizarUsuario ] = await knex('usuarios')
+            .update({ nome, email, senha: senhaCriptografada })
+            .where({ id: usuarioLogado.id })
+            .returning([ 'id', 'nome', 'email' ])
 
         return mensagemJson(200, res, atualizarUsuario)
     } catch (error) {
         return mensagemJson(500, res, error.message)
-        
     }
 }
 
-export const detalharPerfil = async (req, res) => {
-    const { senha:_, ...usuario } = req.usuario
-    try {
-        return mensagemJson(200, res, usuario)
-    } catch (error) {
-        return mensagemJson(500, res, error.message)
-    }
-}
+export const detalhar = (req, res) => mensagemJson(200, res, req.usuarioLogado)

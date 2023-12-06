@@ -1,35 +1,24 @@
 import { mensagemJson } from '../servicos/servico.js'
 import { knex } from '../conexao/conexao.js' 
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import { compare } from 'bcrypt'
+import { sign } from 'jsonwebtoken'
 
 export const logar = async (req, res) => {
     const { email, senha } = req.body
 
     try {
-        const usuarioExistente = await knex('usuarios').where({ email })
+        const [ usuarioExiste ] = await knex('usuarios').where({ email })
+        if(!usuarioExiste) return mensagemJson(404, res, 'Email não esta cadastrado.')
 
-        if(usuarioExistente.length === 0) return mensagemJson(404, res, 'Email e/ou senha inválidos.')
+        const senhaValida = await compare(senha, usuarioExiste.senha)
+        if(!senhaValida) return mensagemJson(401, res, 'Senha incorreta.')
+        
+        delete usuarioExiste.senha
+        const payload = { id: usuarioExiste.id }, options = { expiresIn: '24h' }
+        const token = sign(payload, process.env.JWT_SECRET_KEY, options)
 
-        const { senha:_, ...usuario } = usuarioExistente[0]
-
-        const senhaValida = await bcrypt.compare(senha, usuarioExistente[0].senha)
-
-        if(!senhaValida) return mensagemJson(400, res, 'Email e/ou senha inválidos.')
-
-        const payload = { id: usuarioExistente[0].id }
-        const options = { expiresIn: '24h' }
-
-        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, options)
-
-        const usuarioLogado = {
-            usuario,
-            token
-        }
-
-        return mensagemJson(200, res, usuarioLogado)
+        return mensagemJson(200, res, { usuario: usuarioExiste, token })
     } catch (error) {
-        console.log(error);
-        return mensagemJson(500, res, error.message)
+        return mensagemJson(500, res, error)
     }
 }

@@ -1,5 +1,5 @@
 import { mensagemJson } from '../servicos/servico.js'
-import jwt from 'jsonwebtoken'
+import { verify } from 'jsonwebtoken'
 import { knex } from '../conexao/conexao.js'
 
 export const validarCampos = (schema) => async (req, res, next) => {
@@ -13,19 +13,17 @@ export const validarCampos = (schema) => async (req, res, next) => {
 
 export const autenticarToken = async (req, res, next) => {
     const { authorization } = req.headers
-
-    if(!authorization) return mensagemJson(401, res, 'Não autorizado.')
+    if(!authorization) return mensagemJson(401, res, 'Informe o token.')
 
     const token = authorization.split(' ')[1]
     try {
-        const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const { id } = verify(token, process.env.JWT_SECRET_KEY)
+        const [ usuarioExiste ] = await knex('usuarios').where({ id })
 
-        const usuario = await knex('usuarios').where({ id })
-
-        if(usuario.length < 1) return mensagemJson(401, res, 'Não autorizado')
-
-        req.usuario = usuario[0]
-
+        if(!usuarioExiste) return mensagemJson(401, res, 'Usuario não encontrado')
+        
+        delete usuarioExiste.senha
+        req.usuarioLogado = { ...usuarioExiste }
         next()
     } catch (error) {
         return mensagemJson(401, res, 'Não autorizado.')
