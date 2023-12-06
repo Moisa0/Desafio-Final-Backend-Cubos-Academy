@@ -1,12 +1,11 @@
 import { Router } from 'express'
 import * as u from '../controladores/usuario.js'
-import { validarCorpoRequisicao } from '../intermediarios/validacaoUsuario.js'
+import { validarCampos, autenticarToken } from '../intermediarios/intermediarios.js'
 import { schemaUsuario } from '../schema/usuario.js'
-import { autenticarToken } from '../intermediarios/autenticacaoToken.js'
 
 export const rotasUsuario = Router()
 
 rotasUsuario.route('/usuario')
-    .post(validarCorpoRequisicao(schemaUsuario), u.cadastrar)
-    .put(validarCorpoRequisicao(schemaUsuario), autenticarToken, u.atualizar)
+    .post(validarCampos(schemaUsuario), u.cadastrar)
+    .put(validarCampos(schemaUsuario), autenticarToken, u.atualizar)
     .get(autenticarToken, u.detalharPerfil)
