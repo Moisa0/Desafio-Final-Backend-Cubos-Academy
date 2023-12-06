@@ -1,4 +1,4 @@
-import Knex from 'knex';
+import Knex from 'knex'
 
 export const knex = Knex({
     client: 'pg',
@@ -9,6 +9,4 @@ export const knex = Knex({
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
     }
-});
-
-
+})
