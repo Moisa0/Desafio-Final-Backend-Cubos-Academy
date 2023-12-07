@@ -1,6 +1,6 @@
 import { mensagemJson } from '../servicos/servico.js'
-import { verify } from 'jsonwebtoken'
 import { knex } from '../conexao/conexao.js'
+const { verify } = import('jsonwebtoken')
 
 export const validarCampos = (schema) => async (req, res, next) => {
     try {

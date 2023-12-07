@@ -1,7 +1,7 @@
 import { mensagemJson } from '../servicos/servico.js'
 import { knex } from '../conexao/conexao.js' 
 import { compare } from 'bcrypt'
-import { sign } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 export const logar = async (req, res) => {
     const { email, senha } = req.body
@@ -15,7 +15,7 @@ export const logar = async (req, res) => {
         
         delete usuarioExiste.senha
         const payload = { id: usuarioExiste.id }, options = { expiresIn: '24h' }
-        const token = sign(payload, process.env.JWT_SECRET_KEY, options)
+        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, options)
 
         return mensagemJson(200, res, { usuario: usuarioExiste, token })
     } catch (error) {

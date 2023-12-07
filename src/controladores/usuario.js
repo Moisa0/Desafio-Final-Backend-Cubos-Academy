@@ -26,9 +26,9 @@ export const atualizar = async (req, res) => {
         const emailEmUso = usuarioExiste && usuarioExiste.email !== usuarioLogado.email
         if (emailEmUso) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
 
-        const senhaCriptografada = await hash(senha, 10)
+        const senhaHash = await hash(senha, 10)
         const [ atualizarUsuario ] = await knex('usuarios')
-            .update({ nome, email, senha: senhaCriptografada })
+            .update({ nome, email, senha: senhaHash })
             .where({ id: usuarioLogado.id })
             .returning([ 'id', 'nome', 'email' ])
 

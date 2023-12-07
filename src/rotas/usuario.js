@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as u from '../controladores/usuario.js'
-import { validarCampos, autenticarToken } from '../intermediarios/intermediarios.js'
+import { autenticarToken, validarCampos } from '../intermediarios/intermediarios.js'
 import { usuario } from '../schema/schemas.js'
 
 export const rotasUsuario = Router()

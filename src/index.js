@@ -1,8 +1,5 @@
-import { todasRotas } from './rotas/export/exportRotas.js'
 import express from 'express'
-import dotenv from 'dotenv'
-
-dotenv.config()
+import { todasRotas } from './rotas/export/exportRotas.js'
 
 const app = express(), porta = process.env.PORT || 3000
 
