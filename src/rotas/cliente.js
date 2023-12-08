@@ -1,7 +1,10 @@
 import { Router } from 'express'
 import * as c from '../controladores/cliente.js'
+import { autenticarToken } from '../intermediarios/intermediarios.js'
 
 export const rotasCliente = Router()
+
+rotasCliente.use(autenticarToken)
 
 rotasCliente.route('/cliente')
     .post(c.cadastrar)
