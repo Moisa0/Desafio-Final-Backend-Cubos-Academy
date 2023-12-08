@@ -1,13 +1,14 @@
 import { Router } from 'express'
 import * as p from '../controladores/produto.js'
-import { autenticarToken } from '../intermediarios/intermediarios.js'
+import { autenticarToken, validarCampos } from '../intermediarios/intermediarios.js'
+import { produto } from '../schema/schemas.js'
 
 export const rotasProduto = Router()
 
 rotasProduto.use(autenticarToken)
 
 rotasProduto.route('/produto')
-    .post(p.cadastrar)
+    .post(validarCampos(produto), p.cadastrar)
     .get(p.listar)
 
 rotasProduto.route('/produto/:id')
