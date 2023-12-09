@@ -4,10 +4,10 @@ import { autenticarToken } from '../intermediarios/intermediarios.js'
 
 export const rotasCliente = Router()
 
-rotasCliente.use(autenticarToken)
+// rotasCliente.use(autenticarToken)
 
 rotasCliente.route('/cliente')
-    .post(c.cadastrar)
+    .post(autenticarToken, c.cadastrar)
     .get(c.listar)
     
 rotasCliente.route('/cliente/:id')
