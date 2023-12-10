@@ -34,8 +34,20 @@ export const listar = async (req, res) => {
     }
 }
 
-export const detalhar = (req, res) => {
+export const detalhar = async (req, res) => {
+    const { id } = req.params
 
+    try {
+        const clienteExiste = await knex("clientes").where({ id })
+
+        if(clienteExiste.length === 0) {
+            return mensagemJson(404, res, "Usuário não encontrado.")
+        }
+
+        return mensagemJson(200, res, clienteExiste)
+    } catch (error) {
+        return mensagemJson(500, res, "Erro interno do servidor")
+    }
 }
 
 export const editarDados = async (req, res) => {

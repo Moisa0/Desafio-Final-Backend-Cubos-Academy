@@ -11,4 +11,4 @@ rotasCliente.route('/cliente')
     
 rotasCliente.route('/cliente/:id')
     .put(autenticarToken, c.editarDados)
-    .get(c.detalhar)
+    .get(autenticarToken, c.detalhar)
