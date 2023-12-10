@@ -25,8 +25,13 @@ export const cadastrar = async (req, res) => {
     }
 }
 
-export const listar = (req, res) => {
-
+export const listar = async (req, res) => {
+    try {
+        const listarClientes = await knex("clientes")
+        return mensagemJson(200, res, listarClientes)
+    } catch (error) {
+        return mensagemJson(500, res, "Erro interno do servidor")
+    }
 }
 
 export const detalhar = (req, res) => {
@@ -45,7 +50,7 @@ export const editarDados = async (req, res) => {
         }
 
         const verificandoEmail = await knex("clientes").where({ email })
-        
+
         if(verificandoEmail.length > 0 && verificandoEmail[0].id != id) {
             return mensagemJson(400, res, "O email fornecido já está cadastrado.")
         }

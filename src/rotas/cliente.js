@@ -7,7 +7,7 @@ export const rotasCliente = Router()
 
 rotasCliente.route('/cliente')
     .post(autenticarToken, c.cadastrar)
-    .get(c.listar)
+    .get(autenticarToken, c.listar)
     
 rotasCliente.route('/cliente/:id')
     .put(autenticarToken, c.editarDados)
