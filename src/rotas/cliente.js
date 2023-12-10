@@ -1,15 +1,14 @@
 import { Router } from 'express'
 import * as c from '../controladores/cliente.js'
-import { autenticarToken } from '../intermediarios/intermediarios.js'
+import { autenticarToken, validarCampos } from '../intermediarios/intermediarios.js'
+import { cliente } from '../schema/schemas.js'
 
 export const rotasCliente = Router()
 
-rotasCliente.use(autenticarToken)
-
 rotasCliente.route('/cliente')
-    .post(c.cadastrar)
-    .get(c.listar)
+    .post(validarCampos(cliente), autenticarToken, c.cadastrar)
+    .get(validarCampos(cliente), autenticarToken, c.listar)
     
 rotasCliente.route('/cliente/:id')
-    .put(c.editarDados)
-    .get(c.detalhar)
+    .put(validarCampos(cliente), autenticarToken, c.editarDados)
+    .get(autenticarToken, c.detalhar)

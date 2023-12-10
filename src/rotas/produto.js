@@ -5,8 +5,6 @@ import { produto } from '../schema/schemas.js'
 
 export const rotasProduto = Router()
 
-rotasProduto.use(autenticarToken)
-
 rotasProduto.route('/produto')
     .post(validarCampos(produto), p.cadastrar)
     .get(p.listar)

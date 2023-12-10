@@ -7,7 +7,7 @@ export const validarCampos = (schema) => async (req, res, next) => {
         await schema.validateAsync(req.body)
         next()
     } catch (error) {
-        return mensagemJson(400, res, error.message)
+        return mensagemJson(400, res, error)
     }
 }
 
