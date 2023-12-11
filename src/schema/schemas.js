@@ -25,7 +25,7 @@ const descricao = Joi.string().required().messages({
     'any.required': 'O campo "descricao" é obrigatório',
 })
 
-const quantidade_estoque = Joi.number().integer().positive().required().vali.messages({
+const quantidade_estoque = Joi.number().integer().positive().required().messages({
     'number.integer': 'Informe um número inteiro',
     'number.positive': 'Informe um número positivo',
     'number.base': 'Informe um número valido',
