@@ -1,4 +1,5 @@
 import { mensagemJson } from '../servicos/servico.js'
+import { msgPersonalizadas } from '../schema/schemas.js'
 import { knex } from '../conexao/conexao.js'
 import jwt from 'jsonwebtoken'
 
@@ -6,8 +7,8 @@ export const validarCampos = (schema) => async (req, res, next) => {
     try {
         await schema.validateAsync(req.body)
         next()
-    } catch (error) {
-        return mensagemJson(400, res, error)
+    } catch ({ details: [ { type } ] }) {
+        return mensagemJson(400, res, msgPersonalizadas[type])
     }
 }
 
@@ -21,12 +22,11 @@ export const autenticarToken = async (req, res, next) => {
         const [ usuarioExiste ] = await knex('usuarios').where({ id })
 
         if(!usuarioExiste) return mensagemJson(401, res, 'Usuario não encontrado')
-        
         delete usuarioExiste.senha
+        
         req.usuarioLogado = { ...usuarioExiste }
         next()
     } catch (error) {
-        console.log(error);
         return mensagemJson(401, res, 'Não autorizado.')
     }
 }
