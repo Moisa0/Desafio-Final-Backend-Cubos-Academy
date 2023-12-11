@@ -23,7 +23,7 @@ CREATE TABLE produtos (
 );
 
 CREATE TABLE clientes (
-  id serial PRIMARY KEY
+  id serial PRIMARY KEY,
   nome text NOT NULL,
   email text NOT NULL UNIQUE,
   cpf text NOT NULL UNIQUE,
@@ -46,3 +46,8 @@ VALUES
 ('Moda'),
 ('Bebê'),
 ('Games');
+
+DROP TABLE clientes
+DROP TABLE produtos
+DROP TABLE usuarios
+DROP TABLE categorias

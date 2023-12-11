@@ -1,13 +1,15 @@
 import { mensagemJson } from '../servicos/servico.js'
+import { msgError } from '../schema/schemas.js'
 import { knex } from '../conexao/conexao.js'
-const { verify } = import('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 export const validarCampos = (schema) => async (req, res, next) => {
     try {
         await schema.validateAsync(req.body)
         next()
     } catch (error) {
-        return mensagemJson(400, res, error.message)
+        const { details: [ { type, context: { key } } ] } = error
+        return mensagemJson(400, res, msgError[type].replace('$', key))
     }
 }
 
@@ -17,12 +19,12 @@ export const autenticarToken = async (req, res, next) => {
 
     const token = authorization.split(' ')[1]
     try {
-        const { id } = verify(token, process.env.JWT_SECRET_KEY)
+        const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY)
         const [ usuarioExiste ] = await knex('usuarios').where({ id })
 
         if(!usuarioExiste) return mensagemJson(401, res, 'Usuario não encontrado')
-        
         delete usuarioExiste.senha
+        
         req.usuarioLogado = { ...usuarioExiste }
         next()
     } catch (error) {
