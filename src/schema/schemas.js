@@ -1,15 +1,16 @@
 import Joi from 'joi'
 
-export const msgPersonalizadas = {
-    'string.max': `O campo "" precisa ter no máximo 30 caracteres`,
-    'string.email': 'Insira um email valido',
-    'string.min': `O campo "" precisa ter no mínino 8 caracteres`,
-    'number.integer': `Informe um número inteiro no campo ""`,
-    'number.positive': `Informe um número positivo no campo ""`,
-    'number.base': `Informe um número valido no campo ""`,
-    'any.required': `O campo "" é obrigatório`,
-    'object.base': `Informe os campos dentro de chaves "{}"`,
-    'string.empty': `O campo "" não poder estar vazio`
+export const msgError = {
+    'string.max': `O campo '$' precisa ter no máximo 30 caracteres.`,
+    'string.email': 'Insira um email valido.',
+    'string.min': `O campo '$' precisa ter no mínino 8 caracteres.`,
+    'number.integer': `Informe um número inteiro no campo '$'.`,
+    'number.positive': `Informe um número positivo no campo '$'.`,
+    'number.base': `Informe um número valido no campo '$'.`,
+    'any.required': `O campo '$' é obrigatório.`,
+    'object.base': `Informe os campos dentro de chaves "{}".`,
+    'string.empty': `O campo '$' não poder estar vazio.`,
+    "object.unknown": `O campo '$' não é permitido.`
 }
 
 const email = Joi.string().email().max(30).required(),
@@ -21,7 +22,7 @@ const email = Joi.string().email().max(30).required(),
     categoria_id = Joi.number().integer().positive().required(),
     cpf = Joi.string().required()
 
-const criaObjJoi = (camposJoiObj) => Joi.object(camposJoiObj).required()
+const criaObjJoi = (camposJoiObj) => Joi.object().keys(camposJoiObj).required()
 
 export const login = criaObjJoi({email, senha})
 

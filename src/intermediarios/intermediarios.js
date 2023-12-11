@@ -1,5 +1,5 @@
 import { mensagemJson } from '../servicos/servico.js'
-import { msgPersonalizadas } from '../schema/schemas.js'
+import { msgError } from '../schema/schemas.js'
 import { knex } from '../conexao/conexao.js'
 import jwt from 'jsonwebtoken'
 
@@ -7,8 +7,9 @@ export const validarCampos = (schema) => async (req, res, next) => {
     try {
         await schema.validateAsync(req.body)
         next()
-    } catch ({ details: [ { type } ] }) {
-        return mensagemJson(400, res, msgPersonalizadas[type])
+    } catch (error) {
+        const { details: [ { type, context: { key } } ] } = error
+        return mensagemJson(400, res, msgError[type].replace('$', key))
     }
 }
 
