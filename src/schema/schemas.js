@@ -53,6 +53,7 @@ export const produto = Joi.object
         'number.base'
     ]))
 
+<<<<<<< HEAD
 export const cliente = Joi.object
     ({nome, email, cpf})
     .required()
@@ -60,3 +61,29 @@ export const cliente = Joi.object
         'string.max',
         'string.email'
     ]))
+=======
+const quantidade_estoque = Joi.number().integer().positive().required().messages({
+    'number.integer': 'Informe um número inteiro',
+    'number.positive': 'Informe um número positivo',
+    'number.base': 'Informe um número valido',
+    'any.required': 'O campo "quantidade_estoque" é obrigatório',
+})
+
+const valor = Joi.number().integer().positive().required().messages({
+    'number.integer': 'Informe um número inteiro',
+    'number.positive': 'Informe um número positivo',
+    'number.base': 'Informe um número valido',
+    'any.required': 'O campo "valor" é obrigatório',
+})
+
+const categoria_id = Joi.number().integer().positive().required().messages({
+    'any.required': 'O campo "categoria_id" é obrigatório',
+})
+
+
+export const login = Joi.object({email, senha})
+
+export const usuario = Joi.object({nome, email, senha})
+
+export const produto = Joi.object({descricao, quantidade_estoque, valor, categoria_id})
+>>>>>>> Luccasmarinho-main

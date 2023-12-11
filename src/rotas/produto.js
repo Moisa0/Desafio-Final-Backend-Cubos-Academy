@@ -5,6 +5,10 @@ import { produto } from '../schema/schemas.js'
 
 export const rotasProduto = Router()
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Luccasmarinho-main
 rotasProduto.route('/produto')
     .post(validarCampos(produto), p.cadastrar)
     .get(p.listar)
