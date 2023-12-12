@@ -10,6 +10,6 @@ rotasProduto.route('/produto')
     .get(p.listar)
 
 rotasProduto.route('/produto/:id')
-    .put(p.editar)
+    .put(validarCampos(produto),p.editar)
     .get(p.detalhar)
     .delete(p.excluir)

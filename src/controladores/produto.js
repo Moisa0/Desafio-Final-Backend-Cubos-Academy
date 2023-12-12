@@ -30,7 +30,25 @@ export const listar = async (req, res) => {
     }
 
 }
-export const editar = (req, res) => {
+export const editar = async (req, res) => {
+
+    const { id } = req.params 
+   const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+
+
+ try {
+      const [verficarProduto] = await knex("produtos").where({ id: id});
+      if(!verficarProduto ) { return mensagemJson(404, res, "Produto não encontrado!")};
+
+      const [verificarCategoria] = await knex("produtos").where({ 'categoria_id': categoria_id});
+      if(!verificarCategoria) {return mensagemJson(404, res, "Categoria não encontrada!")};
+       
+
+       const updateProduto = await knex("produtos").update(req.body).where({id})
+       return mensagemJson(200, res, "Produto atualizado com sucesso!")
+ } catch (error) {
+    return mensagemJson(500, res, "Erro interno do servidor!")
+ }
 
 }
 
