@@ -14,10 +14,22 @@ export const cadastrar = async (req, res) => {
     }
 }
 
-export const listar = (req, res) => {
+export const listar = async (req, res) => {
+    const { categoria_id } = req.query;
+
+    try {
+        if (categoria_id) {
+            const listarProdutoPeloId = await knex("produtos").where('id', categoria_id);
+            return mensagemJson(200, res, listarProdutoPeloId);
+        } 
+      
+         const listarProdutos = await knex("produtos");
+         return mensagemJson(200, res, listarProdutos);
+    } catch (error) {
+        return mensagemJson(500, res, "Erro interno do servidor")
+    }
 
 }
-
 export const editar = (req, res) => {
 
 }
