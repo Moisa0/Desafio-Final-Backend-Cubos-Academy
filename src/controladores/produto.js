@@ -28,10 +28,6 @@ export const listar = async (req, res) => {
 
         mensagemJson(200, res, listaProdutosInfo)
     } catch (error) {
-<<<<<<< HEAD
-=======
-        console.log(error)
->>>>>>> 7160c8757e6dfd0a9f89afe056b3d3ef8a2c243d
         mensagemJson(500, res, 'Erro interno do servidor')
     }
 }
