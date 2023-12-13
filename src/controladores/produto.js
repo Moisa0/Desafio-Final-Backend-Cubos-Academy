@@ -56,7 +56,6 @@ export const detalhar = async (req, res) => {
         if (!produtoInfo) return mensagemJson(404, res, 'Produto não encontrado')
         mensagemJson(200, res, produtoInfo)
     } catch (error) {
-        console.log(error)
         mensagemJson(500, res, 'Erro interno do servidor')
     }
 }
