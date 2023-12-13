@@ -3,13 +3,38 @@ import { msgError } from '../schema/schemas.js'
 import { knex } from '../conexao/conexao.js'
 import jwt from 'jsonwebtoken'
 
-export const validarCampos = (schema) => async (req, res, next) => {
+export const validarCampos = (schema, stringObj) => async (req, res, next) => {
     try {
-        await schema.validateAsync(req.body)
+        await schema.validateAsync(req[stringObj])
         next()
     } catch (error) {
         const { details: [ { type, context: { key } } ] } = error
         return mensagemJson(400, res, msgError[type].replace('$', key))
+    }
+}
+
+export const campoUnico = (tabela,  campos) => async (req, res, next) => {
+    const { body, method, usuarioLogado, route: { path } } = req
+    try {
+        const funcaoWhereComOr = (acc, campo) => acc + `${campo} = '${body[campo]}' OR `
+        const whereString = campos.reduce(funcaoWhereComOr, '').slice(0, -3)
+        const [ usuarioExiste ] = await knex(tabela).select('*').whereRaw(whereString)
+
+        if (!usuarioExiste) {
+            if (path === '/login') return mensagemJson(404, res, 'Email não encontrado.')
+            return next()
+        }
+        if (method === 'PUT') {
+            if (usuarioLogado.id === usuarioExiste.id) return next()
+        }
+        if (path === '/login') {
+            req.usuarioLogin = {...usuarioExiste}
+            return next()
+        }
+        const campoExiste = campos.find(campo => usuarioExiste[campo] === body[campo])
+        mensagemJson(400, res, `O ${campoExiste} já existe.`)
+    } catch (error) {
+        mensagemJson(500, res, 'Erro interno no servidor')
     }
 }
 
@@ -29,5 +54,18 @@ export const autenticarToken = async (req, res, next) => {
         next()
     } catch (error) {
         return mensagemJson(401, res, 'Não autorizado.')
+    }
+}
+
+export const seIdExiste = (nomeTabela) => async (req, res, next) => {
+    const { params: { id }, method } = req
+    try {
+        const [ verificandoId ] = await knex(nomeTabela).where({ id })
+        const msgIdNaoEncontrado = nomeTabela.slice(0, -1) + ' não encontrado.'
+        if (!verificandoId) return mensagemJson(404, res, msgIdNaoEncontrado)
+        if (method === 'GET') req.idAtual = { ...verificandoId }
+        next()
+    } catch (error) {
+        mensagemJson(500, res, 'Erro interno do servidor')
     }
 }

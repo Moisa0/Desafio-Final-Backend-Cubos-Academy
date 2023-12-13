@@ -3,38 +3,31 @@ import { knex } from '../conexao/conexao.js'
 import { hash } from 'bcrypt'
 
 export const cadastrar = async (req, res) => {
-    const { nome, email, senha } = req.body
-
+    const { body: { senha }, body} = req
     try {
-        const [ emailExiste ] = await knex('usuarios').where({ email })
-        if(emailExiste) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
+        body.senha = await hash(senha, 10)
+        const [ usuarioInfo ] = await knex('usuarioInfos')
+            .insert({...body})
+            .returning(['id', 'nome', 'email'])
 
-        const usuario = { nome, email, senha: await hash(senha, 10) }
-        const [ usuarioCadastrado ] = await knex('usuarios').insert(usuario).returning(['id', 'nome', 'email'])
-
-        return mensagemJson(201, res, usuarioCadastrado)
+        mensagemJson(201, res, usuarioInfo)
     } catch (error) {
-        return mensagemJson(500, res, error.message)
+        mensagemJson(500, res, 'Erro interno do servidor')
     }
 }
 
 export const atualizar = async (req, res) => {
-    const { body: { nome, email, senha }, usuarioLogado } = req
-
+    const { body: { senha }, body, usuarioLogado: { id } } = req
     try {
-        const [ usuarioExiste ] = await knex('usuarios').where({ email })
-        const emailEmUso = usuarioExiste && usuarioExiste.email !== usuarioLogado.email
-        if (emailEmUso) return mensagemJson(400, res, 'O email fornecido já está cadastrado.')
-
-        const senhaHash = await hash(senha, 10)
-        const [ atualizarUsuario ] = await knex('usuarios')
-            .update({ nome, email, senha: senhaHash })
-            .where({ id: usuarioLogado.id })
+        body.senha = await hash(senha, 10)
+        const [ usuarioInfo ] = await knex('usuarios')
+            .update({...body})
+            .where({ id })
             .returning([ 'id', 'nome', 'email' ])
 
-        return mensagemJson(200, res, atualizarUsuario)
+        mensagemJson(200, res, usuarioInfo)
     } catch (error) {
-        return mensagemJson(500, res, error.message)
+        mensagemJson(500, res, 'Erro interno do servidor')
     }
 }
 
