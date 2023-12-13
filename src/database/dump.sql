@@ -27,12 +27,12 @@ CREATE TABLE clientes (
   nome text NOT NULL,
   email text NOT NULL UNIQUE,
   cpf text NOT NULL UNIQUE,
-  cep text NOT NULL,
-  rua text NOT NULL,
-  numero int NOT NULL,
-  bairro text NOT NULL,
-  cidade text NOT NULL,
-  estado text NOT NULL
+  cep text,
+  rua text,
+  numero int,
+  bairro text,
+  cidade text,
+  estado text
 );
 
 INSERT INTO categorias (descricao) 
@@ -46,8 +46,3 @@ VALUES
 ('Moda'),
 ('Bebê'),
 ('Games');
-
-DROP TABLE clientes
-DROP TABLE produtos
-DROP TABLE usuarios
-DROP TABLE categorias
