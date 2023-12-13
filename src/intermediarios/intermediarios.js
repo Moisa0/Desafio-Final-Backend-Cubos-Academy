@@ -25,7 +25,10 @@ export const campoUnico = (tabela,  campos) => async (req, res, next) => {
             return next()
         }
         if (method === 'PUT') {
-            if (usuarioLogado.id === usuarioExiste.id) return next()
+            const putUsuario = usuarioLogado.id === usuarioExiste.id && path === '/usuario'
+            if (putUsuario) return next()
+            const { idAtual } = req
+            if (idAtual.id === usuarioExiste.id) return next()
         }
         if (path === '/login') {
             req.usuarioLogin = {...usuarioExiste}
@@ -58,12 +61,12 @@ export const autenticarToken = async (req, res, next) => {
 }
 
 export const seIdExiste = (nomeTabela) => async (req, res, next) => {
-    const { params: { id }, method } = req
+    const { params: { id } } = req
     try {
         const [ verificandoId ] = await knex(nomeTabela).where({ id })
         const msgIdNaoEncontrado = nomeTabela.slice(0, -1) + ' não encontrado.'
         if (!verificandoId) return mensagemJson(404, res, msgIdNaoEncontrado)
-        if (method === 'GET') req.idAtual = { ...verificandoId }
+        req.idAtual = { ...verificandoId }
         next()
     } catch (error) {
         mensagemJson(500, res, 'Erro interno do servidor')

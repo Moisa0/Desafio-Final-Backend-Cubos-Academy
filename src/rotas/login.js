@@ -7,9 +7,8 @@ import {
 
 export const rotasLogin = Router()
 
-rotasLogin.use('/login',
-    validarCampos(s_login, 'body'),
-    campoUnico('usuarios', ['email']))
-
 rotasLogin.route('/login')
-    .post(l.logar)
+    .post(
+        validarCampos(s_login, 'body'),
+        campoUnico('usuarios', ['email']), 
+        l.logar)

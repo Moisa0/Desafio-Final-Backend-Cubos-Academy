@@ -14,14 +14,18 @@ export const rotasCliente = Router()
 rotasCliente.use('/cliente', autenticarToken)
 
 rotasCliente.route('/cliente')
-    .all(validarCampos(s_cliente, 'body'))
-    .post(campoUnico('clientes', ['email', 'cpf']),
-        c.cadastrar)
     .get(c.listar)
+    .post(
+        validarCampos(s_cliente, 'body'),
+        campoUnico('clientes', ['email', 'cpf']),
+        c.cadastrar)
     
 rotasCliente.route('/cliente/:id')
-    .all(validarCampos(s_idCheck, 'params'), seIdExiste('clientes'))
-    .put(validarCampos(s_cliente, 'body'),
+    .all(
+        validarCampos(s_idCheck, 'params'), 
+        seIdExiste('clientes'))
+    .put(
+        validarCampos(s_cliente, 'body'),
         campoUnico('clientes', ['email', 'cpf']),
         c.editarDados)
     .get(c.detalhar)

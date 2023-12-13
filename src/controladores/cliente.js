@@ -9,17 +9,20 @@ export const cadastrar = async (req, res) => {
 
         mensagemJson(200, res, clienteInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        mensagemJson(500, res, 'Erro interno do servidor ao cadastrar clientes.')
     }
 }
 
 export const editarDados = async (req, res) => {
     const { params: { id }, body } = req
     try {
-        const [ updateCliente ]= await knex('clientes').update({...body}).where({ id })
-        mensagemJson(200, res, updateCliente)
+        const [ upClienteInfo ] = await knex('clientes')
+            .update({...body})
+            .where({ id })
+            .returning('*')
+        mensagemJson(200, res, upClienteInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        mensagemJson(500, res, 'Erro interno do servidor ao editar clientes')
     }
 }
 
@@ -28,7 +31,7 @@ export const listar = async (req, res) => {
         const listaCilentes = await knex('clientes')
         mensagemJson(200, res, listaCilentes)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        mensagemJson(500, res, 'Erro interno do servidor ao listar clientes')
     }
 }
 
