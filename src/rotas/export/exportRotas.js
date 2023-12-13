@@ -4,7 +4,6 @@ import { rotasLogin } from '../login.js'
 import { rotasProduto } from '../produto.js'
 import { rotasUsuario } from '../usuario.js'
 
-
 export const todasRotas = [
     rotasCategorias,
     rotasCliente,
