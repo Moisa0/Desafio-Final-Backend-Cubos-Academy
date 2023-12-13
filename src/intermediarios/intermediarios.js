@@ -43,7 +43,7 @@ export const campoUnico = (tabela,  campos) => async (req, res, next) => {
 
 export const autenticarToken = async (req, res, next) => {
     const { authorization } = req.headers
-    if(!authorization) return mensagemJson(401, res, 'Informe o token.')
+    if(!authorization) return mensagemJson(400, res, 'Informe o token.')
 
     const token = authorization.split(' ')[1]
     try {
