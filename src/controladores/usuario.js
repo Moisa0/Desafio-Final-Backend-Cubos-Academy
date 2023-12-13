@@ -6,7 +6,7 @@ export const cadastrar = async (req, res) => {
     const { body: { senha }, body} = req
     try {
         body.senha = await hash(senha, 10)
-        const [ usuarioInfo ] = await knex('usuarioInfos')
+        const [ usuarioInfo ] = await knex('usuarios')
             .insert({...body})
             .returning(['id', 'nome', 'email'])
 
