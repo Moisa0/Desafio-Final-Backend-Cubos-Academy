@@ -1,19 +1,23 @@
-import { mensagemJson } from '../servicos/servico.js'
+import { msgJson } from '../servicos/servico.js'
 import { compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 export const logar = async (req, res) => {
-    const { body: { senha }, usuarioLogin } = req
+    const { body: { senha }, idUnico } = req
     try {
-        const senhaValida = await compare(senha, usuarioLogin.senha)
-        if(!senhaValida) return mensagemJson(401, res, 'Senha incorreta.')
-        delete usuarioLogin.senha
+        if (!idUnico) return msgJson(404, res, 'Email não cadastrado.')
+        const { idObj, idObj: { id } } = idUnico
         
-        const payload = { id: usuarioLogin.id }, options = { expiresIn: '24h' }
+        const senhaValida = await compare(senha, idObj.senha)
+        if(!senhaValida) return msgJson(401, res, 'Senha incorreta.')
+
+        delete idObj.senha
+        
+        const payload = { id }, options = { expiresIn: '24h' }
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, options)
 
-        mensagemJson(200, res, { usuario: {...usuarioLogin}, token })
+        msgJson(200, res, { usuario: idObj, token })
     } catch (error) {
-        mensagemJson(500, res, error)
+        msgJson(500, res, error)
     }
 }

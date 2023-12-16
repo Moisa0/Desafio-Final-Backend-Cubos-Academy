@@ -1,6 +1,6 @@
 {
   "name": "sistema-pdv",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "![](https://i.imgur.com/xG74tOh.png)",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,10 @@
   },
   "keywords": [
     "nodejs",
-    "JavaScript",
-    "express"
+    "javaScript",
+    "express",
+    "npm",
+    "project"
   ],
   "author": "Felipe Guimarães, Luccas Oliveira Marinho, Rafael Alves, Helison Santos, Moisés dos Santos Teles de Jesus",
   "license": "ISC",

@@ -6,7 +6,6 @@ import {
 import { 
     autenticarToken,
     campoUnico,
-    seIdExiste,
     validarCampos } from '../intermediarios/intermediarios.js'
     
 export const rotasCliente = Router()
@@ -17,15 +16,16 @@ rotasCliente.route('/cliente')
     .get(c.listar)
     .post(
         validarCampos(s_cliente, 'body'),
-        campoUnico('clientes', ['email', 'cpf']),
+        campoUnico('clientes', ['email', 'cpf'], 'body'),
         c.cadastrar)
     
 rotasCliente.route('/cliente/:id')
     .all(
-        validarCampos(s_idCheck, 'params'), 
-        seIdExiste('clientes'))
+        validarCampos(s_idCheck, 'params'),
+        campoUnico('clientes', ['id'], 'params'))
     .put(
         validarCampos(s_cliente, 'body'),
-        campoUnico('clientes', ['email', 'cpf']),
+        campoUnico('clientes', ['email', 'cpf'], 'body', 'idUnico2'),
         c.editarDados)
-    .get(c.detalhar)
+    .get(
+        c.detalhar)

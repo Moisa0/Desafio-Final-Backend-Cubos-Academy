@@ -1,38 +1,52 @@
 import { knex } from '../conexao/conexao.js'
-import { mensagemJson } from '../servicos/servico.js'
+import { msgJson } from '../servicos/servico.js'
 
 export const cadastrar = async (req, res) => {
-    const { body } = req
+    const { body, idUnico } = req
     try {
+        if (idUnico) return msgJson(404, res, `O ${idUnico.campo} já existe.`)
         const [ clienteInfo ] = await knex('clientes')
             .insert({...body}).returning('*')
 
-        mensagemJson(200, res, clienteInfo)
+        msgJson(200, res, clienteInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor ao cadastrar clientes.')
+        msgJson(500, res, 'Erro interno do servidor ao cadastrar clientes.')
     }
 }
 
 export const editarDados = async (req, res) => {
-    const { params: { id }, body } = req
+    const { params: { id }, body, idUnico, idUnico2 } = req
     try {
+        if (!idUnico) return msgJson(404, res, 'Cliente não encontrado.')
+        if (idUnico2) {
+            const { idObj } = idUnico2
+            if (idObj.id !== id) 
+                return msgJson(400, res, `O ${idUnico2.campo} já existe.`)
+        }
+
         const [ upClienteInfo ] = await knex('clientes')
             .update({...body})
             .where({ id })
             .returning('*')
-        mensagemJson(200, res, upClienteInfo)
+            
+        msgJson(200, res, upClienteInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor ao editar clientes')
+        msgJson(500, res, 'Erro interno do servidor ao editar clientes')
     }
 }
 
 export const listar = async (req, res) => {
     try {
         const listaCilentes = await knex('clientes')
-        mensagemJson(200, res, listaCilentes)
+        msgJson(200, res, listaCilentes)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor ao listar clientes')
+        msgJson(500, res, 'Erro interno do servidor ao listar clientes')
     }
 }
 
-export const detalhar = (req, res) => mensagemJson(200, res, req.idAtual)
+export const detalhar = (req, res) => {
+    const { idUnico } = req
+    if (!idUnico) return msgJson(404, res, 'Cliente não cadastrado.') 
+    
+    msgJson(200, res, idUnico.idObj)
+}

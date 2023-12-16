@@ -10,5 +10,5 @@ export const rotasLogin = Router()
 rotasLogin.route('/login')
     .post(
         validarCampos(s_login, 'body'),
-        campoUnico('usuarios', ['email']), 
+        campoUnico('usuarios', ['email'], 'body'), 
         l.logar)

@@ -9,7 +9,13 @@ import {
 export const rotasUsuario = Router()
 
 rotasUsuario.route('/usuario')
-    .post(validarCampos(s_usuario, 'body'), campoUnico('usuarios', ['email']), u.cadastrar)
+    .post(
+        validarCampos(s_usuario, 'body'), 
+        campoUnico('usuarios', ['email'], 'body'),
+        u.cadastrar)
     .all(autenticarToken)
-    .put(validarCampos(s_usuario, 'body'), campoUnico('usuarios', ['email']), u.atualizar)
+    .put(
+        validarCampos(s_usuario, 'body'),
+        campoUnico('usuarios', ['email'], 'body'),
+        u.atualizar)
     .get(u.detalhar)

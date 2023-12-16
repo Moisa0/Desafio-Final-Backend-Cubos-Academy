@@ -1,5 +1,4 @@
-export const mensagemJson = (statusCode, objRes, msg = undefined) => {
-    if (!msg ) return  objRes.status(statusCode).json() 
-    if (typeof msg === 'object') return objRes.status(statusCode).json(msg)
-    return objRes.status(statusCode).json({ mensagem: msg })
+export const msgJson = (statusCode, objRes, msg = undefined) => {
+    const conteudoJson = !msg ? null : typeof msg === 'object' ? msg : { mensagem: msg }
+    return objRes.status(statusCode).json(conteudoJson)
 }

@@ -1,19 +1,17 @@
 import { knex } from '../conexao/conexao.js'
-import { mensagemJson } from '../servicos/servico.js'
+import { msgJson } from '../servicos/servico.js'
 
 export const cadastrar = async (req, res) => {
-    const { categoria_id } = req.body
+    const { body, idUnico  } = req
     try {
-        const [ categoriaExiste ] = await knex('categorias')
-            .where({ id: categoria_id })
-        if (!categoriaExiste) return mensagemJson(400, res, 'Categoria não existe')
+        if (!idUnico) return msgJson(400, res, 'Categoria não existe')
 
         const [ produtoInfo ] = await knex('produtos')
-        .insert({ ...req.body }).returning(['*'])
+        .insert(body).returning(['*'])
 
-        mensagemJson(201, res, produtoInfo)
+        msgJson(201, res, produtoInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        msgJson(500, res, 'Erro interno do servidor')
     }
 }
 
@@ -26,46 +24,49 @@ export const listar = async (req, res) => {
         .join('produtos', 'produtos.categoria_id', '=', 'categorias.id')
         .whereRaw(expressao)
 
-        mensagemJson(200, res, listaProdutosInfo)
+        msgJson(200, res, listaProdutosInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        msgJson(500, res, 'Erro interno do servidor')
     }
 }
 
 export const editar = async (req, res) => {
-    const { params: { id }, body: { categoria_id } } = req
+    const { params: { id }, idUnico, body } = req
     try {
-        const [ verificarCategoria ] = await knex('categorias').where({ id: categoria_id })
-        if(!verificarCategoria) return mensagemJson(404, res, 'Categoria não encontrada!')
+        if(!idUnico) return msgJson(404, res, 'Categoria não encontrada!')
 
-        await knex('produtos').update(req.body).where({id})
-        mensagemJson(204, res)
+        await knex('produtos').update(body).where({id})
+        msgJson(204, res)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor!')
+        msgJson(500, res, 'Erro interno do servidor!')
     }
 }
 
 export const detalhar = async (req, res) => {
     const { params: { id } } = req
     try {
-        const [ produtoInfo ] = await knex('produtos')
-            .select('produtos.*', 'categorias.descricao as descricao_categoria')
-            .join('categorias', 'produtos.categoria_id', '=', 'categorias.id')
-            .where({ 'produtos.id': id })
+        
+        const produtoInfo = await knex('produtos')
+        .select('produtos.*', 'categorias.descricao as descricao_categoria')
+        .join('categorias', 'produtos.categoria_id', '=', 'categorias.id')
+        .where({ 'produtos.id': id })
 
-        if (!produtoInfo) return mensagemJson(404, res, 'Produto não encontrado')
-        mensagemJson(200, res, produtoInfo)
+        if (!produtoInfo) return msgJson(404, res, 'Produto não encontrado')
+        
+        msgJson(200, res, produtoInfo)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        msgJson(500, res, 'Erro interno do servidor')
     }
 }
 
 export const excluir = async (req, res) => {
-    const { params: { id } } = req
+    const { params: { id }, idUnico } = req
     try {
+        if (!idUnico) return msgJson(404, res, 'Produto não encontrado.')
+
         await knex('produtos').where({ id }).del()
-        mensagemJson(204, res)
+        msgJson(204, res)
     } catch (error) {
-        mensagemJson(500, res, 'Erro interno do servidor')
+        msgJson(500, res, 'Erro interno do servidor')
     }
 }
